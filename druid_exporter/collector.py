@@ -341,6 +341,22 @@ class DruidCollector(object):
                'druid_historical_segment_usedPercent',
                'Percent of space used on historical',
                labels=['tier', 'datasource']),
+            'query/segment/time': GaugeMetricFamily(
+               'druid_historical_query_segment_time',
+               'Milliseconds used to query individual segment',
+               labels=['id', 'status', 'segment']),
+            'query/wait/time': GaugeMetricFamily(
+               'druid_historical_query_wait_time',
+               'Milliseconds spent waiting for a segment to be scanned',
+               labels=['id', 'segment']),
+            'query/segmentAndCache/time': GaugeMetricFamily(
+               'druid_historical_query_segementandcache_time',
+               'Milliseconds taken to query individual segment or hit the cache',
+               labels=['id', 'segment']),
+            'query/cpu/time': GaugeMetricFamily(
+               'druid_historical_query_segementandcache_time',
+               'Microseconds of CPU time taken to complete a query',
+               labels=['dataSource', 'type', 'interval', 'hasFilters', 'duration', 'context', 'remoteAddress', 'id', 'numDimensions']),
             'jetty/numOpenConnections': GaugeMetricFamily(
                'druid_historical_jetty_numOpenConnections',
                'Number of open jetty connections.',

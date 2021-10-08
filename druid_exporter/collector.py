@@ -68,6 +68,10 @@ class DruidCollector(object):
                 'query/success/count': None,
                 'query/failed/count': None,
                 'query/interrupted/count': None,
+                'query/segment/time': None,
+                'query/wait/time': None,
+                'query/segmentAndCache/time': None,
+                'query/cpu/time':  None,
                 'segment/count': ['tier', 'dataSource'],
                 'segment/max': None,
                 'segment/used': ['tier', 'dataSource'],
@@ -168,6 +172,10 @@ class DruidCollector(object):
             'query/success/count',
             'query/failed/count',
             'query/interrupted/count',
+            'query/segment/time',
+            'query/wait/time',
+            'query/segmentAndCache/time',
+            'query/cpu/time',
             'segment/max',
             'segment/count',
             'segment/used',
@@ -333,6 +341,18 @@ class DruidCollector(object):
                'druid_historical_segment_usedPercent',
                'Percent of space used on historical',
                labels=['tier', 'datasource']),
+            'query/segment/time': GaugeMetricFamily(
+               'druid_historical_query_segment_time',
+               'Milliseconds used to query individual segment'),
+            'query/wait/time': GaugeMetricFamily(
+               'druid_historical_query_wait_time',
+               'Milliseconds spent waiting for a segment to be scanned'),
+            'query/segmentAndCache/time': GaugeMetricFamily(
+               'druid_historical_query_segementandcache_time',
+               'Milliseconds taken to query individual segment or hit the cache'),
+            'query/cpu/time': GaugeMetricFamily(
+               'druid_historical_query_cpu_time',
+               'Microseconds of CPU time taken to complete a query'),
             'jetty/numOpenConnections': GaugeMetricFamily(
                'druid_historical_jetty_numOpenConnections',
                'Number of open jetty connections.',

@@ -354,7 +354,7 @@ class DruidCollector(object):
                'Milliseconds taken to query individual segment or hit the cache',
                labels=['id', 'segment']),
             'query/cpu/time': GaugeMetricFamily(
-               'druid_historical_query_segementandcache_time',
+               'druid_historical_query_cpu_time',
                'Microseconds of CPU time taken to complete a query',
                labels=['dataSource', 'type', 'interval', 'hasFilters', 'duration', 'context', 'remoteAddress', 'id', 'numDimensions']),
             'jetty/numOpenConnections': GaugeMetricFamily(

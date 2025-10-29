@@ -218,7 +218,7 @@ class DruidCollector(object):
     def sanitize_field(datapoint_field):
         return datapoint_field.replace('druid/', '').lower()
 
-    def _get_realtime_counters(self):
+    def _get_realtime_counters(self, daemon):
         return {
             'ingest/events/thrownAway': GaugeMetricFamily(
                'druid_realtime_ingest_events_thrown_away_count',
@@ -258,11 +258,11 @@ class DruidCollector(object):
                'Time gap between the data time in event and current system time.',
                labels=['datasource']),
             'jetty/numOpenConnections': GaugeMetricFamily(
-               'druid_middlemanager_jetty_numOpenConnections',
+               'druid_' + daemon + '_jetty_numOpenConnections',
                'Number of open jetty connections.',
                labels=['datasource']),
             'segment/scan/pending': GaugeMetricFamily(
-                'druid_peon_segment_scan_pending',
+                'druid_' + daemon + '_segment_scan_pending',
                 'Number of segments in queue waiting to be scanned.'),
         }
 
@@ -575,11 +575,12 @@ class DruidCollector(object):
 
         historical_health_metrics = self._get_historical_counters()
         coordinator_metrics = self._get_coordinator_counters()
-        realtime_metrics = self._get_realtime_counters()
+        realtime_metrics_peon = self._get_realtime_counters('peon')
+        realtime_metrics_middlemanager = self._get_realtime_counters('middlemanager')
         for daemon, metrics in [('coordinator', coordinator_metrics),
                                 ('historical', historical_health_metrics),
-                                ('peon', realtime_metrics),
-                                ('middlemanager', realtime_metrics)]:
+                                ('peon', realtime_metrics_peon),
+                                ('middlemanager', realtime_metrics_middlemanager)]:
             for metric in metrics:
                 if not self.counters[metric] or daemon not in self.counters[metric]:
                     if not self.supported_metric_names[daemon][metric]:

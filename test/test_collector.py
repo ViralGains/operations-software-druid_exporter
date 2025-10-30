@@ -167,6 +167,22 @@ class TestDruidCollector(unittest.TestCase):
                     'metric_name': 'druid_historical_query_interrupted_count',
                     'labels': None,
                 },
+                'query/segment/time': {
+                    'metric_name': 'druid_historical_query_segment_time',
+                    'labels': None,
+                },
+                'query/wait/time': {
+                    'metric_name': 'druid_historical_query_wait_time',
+                    'labels': None,
+                },
+                'query/segmentAndCache/time': {
+                    'metric_name': 'druid_historical_query_segmentandcache_time',
+                    'labels': None,
+                },
+                'query/cpu/time': {
+                    'metric_name': 'druid_historical_query_cpu_time',
+                    'labels': None,
+                },
             },
             'coordinator': {
                 'segment/assigned/count': {
@@ -302,7 +318,11 @@ class TestDruidCollector(unittest.TestCase):
                 'ingest/handoff/count': {
                     'metric_name': 'druid_realtime_ingest_handoff_count',
                     'labels': ['dataSource'],
-                }
+                },
+                'segment/scan/pending': {
+                    'metric_name': 'druid_peon_segment_scan_pending',
+                    'labels': None,
+                },
             },
             'middlemanager': {
                 'query/time': {
@@ -348,6 +368,10 @@ class TestDruidCollector(unittest.TestCase):
                 'jetty/numOpenConnections': {
                     'metric_name': 'druid_middlemanager_jetty_numOpenConnections',
                     'labels': None,
+                },
+                'segment/scan/pending': {
+                    'metric_name': 'druid_middlemanager_segment_scan_pending',
+                    'labels': None,
                 },                
             }            
         }
@@ -384,6 +408,12 @@ class TestDruidCollector(unittest.TestCase):
             'druid_historical_failed_query_count',
             'druid_historical_query_count',
             'druid_exporter_datapoints_registered_total',
+            'druid_historical_query_segment_time',
+            'druid_historical_query_cpu_time',
+            'druid_historical_query_wait_time',
+            'druid_peon_segment_scan_pending',
+            'druid_middlemanager_segment_scan_pending',
+            'druid_historical_query_segementandcache_time',
         ]
 
     def test_store_histogram(self):
@@ -835,7 +865,25 @@ class TestDruidCollector(unittest.TestCase):
              "host":"druid1001.eqiad.wmnet:8082", "metric":"query/interrupted/count", "value":0},
 
             {"feed":"metrics", "timestamp":"2019-08-16T13:27:50.946Z", "service":"druid/historical",
-             "host":"druid1001.eqiad.wmnet:8082", "metric":"query/failed/count", "value":0}
+             "host":"druid1001.eqiad.wmnet:8082", "metric":"query/failed/count", "value":0},
+            
+            {"feed": "metrics", "timestamp": "2025-10-30T14:32:00Z", "service": "druid/historical", 
+             "host": "druid1001.eqiad.wmnet:8082", "metric": "query/segment/time", "value": 0.0},
+            
+            {"feed": "metrics", "timestamp": "2025-10-30T14:32:00Z", "service": "druid/historical", 
+             "host": "druid1001.eqiad.wmnet:8082", "metric": "query/wait/time", "value": 0.0},
+            
+            {"feed": "metrics", "timestamp": "2025-10-30T14:32:00Z", "service": "druid/historical", 
+             "host": "druid1001.eqiad.wmnet:8082", "metric": "query/segmentAndCache/time", "value": 0.0},
+
+            {"feed": "metrics", "timestamp": "2025-10-30T14:32:00Z", "service": "druid/historical", 
+             "host": "druid1001.eqiad.wmnet:8082", "metric": "query/cpu/time", "value": 0.0},
+            
+            {"feed": "metrics", "timestamp": "2025-10-30T14:32:00Z", "service": "druid/peon", 
+             "host": "druid1001.eqiad.wmnet:8101", "metric": "segment/scan/pending", "value": 0.0},
+            
+            {"feed": "metrics", "timestamp": "2025-10-30T14:32:00Z", "service": "druid/middlemanager", 
+             "host": "druid1001.eqiad.wmnet:8101", "metric": "segment/scan/pending", "value": 0.0}
         ]
 
         # The following datapoint registration batch should not generate
